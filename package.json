@@ -1,0 +1,29 @@
+{
+  "name": "spottly-backend",
+  "version": "1.0.0",
+  "description": "A web application for connecting businesses and potential clients.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickCoder1309/Spottly-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NickCoder1309/Spottly-Backend/issues"
+  },
+  "homepage": "https://github.com/NickCoder1309/Spottly-Backend#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
