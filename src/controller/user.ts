@@ -1,15 +1,15 @@
+import bcrypt from "bcrypt";
 import {
-    createUser ,
-    getUserByEmail,
-    getUserByUsername,
-} from "../services/user"
-import { Request,Response } from "express"
-
-
+  createUser,
+  getUserByEmail,
+  getUserByUsername,
+} from "../services/user";
+import { generateToken, verifyToken } from "../services/auth";
+import { Request, Response } from "express";
 
 export async function registerUser(req: Request, res: Response) {
   try {
-    const { email, name, age, password ,username,surname} = req.body;
+    const { email, name, age, password, username, surname } = req.body;
 
     if (!email || !name || age === undefined || !password) {
       return res.status(400).json({
@@ -66,12 +66,21 @@ export async function registerUser(req: Request, res: Response) {
       });
     }
     const existingEmail = await getUserByEmail(email);
-    const existingUsername = await getUserByUsername(username)
+    const existingUsername = await getUserByUsername(username);
     if (existingEmail || existingUsername) {
-      return res.status(409).json({ error: "El email o nombre de usuario ya está registrado" });
+      return res
+        .status(409)
+        .json({ error: "El email o nombre de usuario ya está registrado" });
     }
 
-    const created = await createUser(email, name, passwordStr, surname, ageNum ,username);
+    const created = await createUser(
+      email,
+      name,
+      passwordStr,
+      surname,
+      ageNum,
+      username,
+    );
     const safeUser = created
       ? {
           id: created.id,
@@ -84,5 +93,41 @@ export async function registerUser(req: Request, res: Response) {
     return res.status(201).json(safeUser);
   } catch (err: any) {
     return res.status(500).json({ error: err.message });
+  }
+}
+
+export async function loginUser(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      return res.status(400).json({ error: "Missing parameters for login" });
+
+    const user = await getUserByEmail(email);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword)
+      return res.status(400).json({ error: "Incorrect password" });
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        surname: user.surname,
+        age: user.age,
+      },
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Server error" });
   }
 }
