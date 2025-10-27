@@ -9,15 +9,14 @@ const app = express();
 if (!process.env.PORT) {
   process.exit(1);
 }
-const PORT: number = parseInt(process.env.PORT as string, 10);
 
 app.use(helmet());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));9
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send("Backend API is running 🚀");
 });
 
-export default app
+export default app;

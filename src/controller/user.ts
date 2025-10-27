@@ -2,9 +2,9 @@ import bcrypt from "bcrypt";
 import {
   createUser,
   getUserByEmail,
-  getUserByUsername,
+  getUserByUsername
 } from "../services/user";
-import { generateToken, verifyToken } from "../services/auth";
+import { generateToken } from "../services/auth";
 import { Request, Response } from "express";
 
 export async function registerUser(req: Request, res: Response) {
@@ -13,7 +13,7 @@ export async function registerUser(req: Request, res: Response) {
 
     if (!email || !name || age === undefined || !password) {
       return res.status(400).json({
-        error: "Faltan campos obligatorios: name, email, age, password",
+        error: "Faltan campos obligatorios: name, email, age, password"
       });
     }
 
@@ -35,8 +35,8 @@ export async function registerUser(req: Request, res: Response) {
       typeof password === "string"
         ? password
         : typeof password === "number"
-          ? String(password)
-          : null;
+        ? String(password)
+        : null;
 
     if (!passwordStr || passwordStr.length < 8) {
       return res
@@ -48,21 +48,21 @@ export async function registerUser(req: Request, res: Response) {
       /(\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b|\bDROP\b|\bCREATE\b)/i, // SQL keywords
       /(\bUNION\b|\bOR\b.*=.*\b|\bAND\b.*=.*\b)/i, // SQL injection patterns
       /['"`;\\]/g,
-      /^\s+$/,
+      /^\s+$/
     ];
 
-    const hasForbiddenPattern = forbiddenPatterns.some((pattern) =>
-      pattern.test(passwordStr),
+    const hasForbiddenPattern = forbiddenPatterns.some(pattern =>
+      pattern.test(passwordStr)
     );
     if (hasForbiddenPattern) {
       return res.status(400).json({
-        error: "La contraseña contiene caracteres o patrones no permitidos",
+        error: "La contraseña contiene caracteres o patrones no permitidos"
       });
     }
 
     if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(passwordStr)) {
       return res.status(400).json({
-        error: "La contraseña debe contener al menos una letra y un número",
+        error: "La contraseña debe contener al menos una letra y un número"
       });
     }
     const existingEmail = await getUserByEmail(email);
@@ -79,7 +79,7 @@ export async function registerUser(req: Request, res: Response) {
       passwordStr,
       surname,
       ageNum,
-      username,
+      username
     );
     const safeUser = created
       ? {
@@ -87,12 +87,12 @@ export async function registerUser(req: Request, res: Response) {
           email: created.email,
           username: created.username,
           name: created.name,
-          age: created.age,
+          age: created.age
         }
       : null;
     return res.status(201).json(safeUser);
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+  } catch {
+    return res.status(500).json({ error: "Server error" });
   }
 }
 
@@ -112,7 +112,7 @@ export async function loginUser(req: Request, res: Response) {
     const token = generateToken({
       id: user.id,
       email: user.email,
-      username: user.username,
+      username: user.username
     });
 
     return res.status(200).json({
@@ -124,10 +124,10 @@ export async function loginUser(req: Request, res: Response) {
         username: user.username,
         name: user.name,
         surname: user.surname,
-        age: user.age,
-      },
+        age: user.age
+      }
     });
-  } catch (err: any) {
+  } catch {
     return res.status(500).json({ error: "Server error" });
   }
 }

@@ -1,6 +1,7 @@
 import { registerUser } from "../../src/controller/user";
 import httpMocks from "node-mocks-http";
 import * as userService from "../../src/services/user";
+import { Request, Response } from "express";
 
 jest.mock("../../src/services/user");
 
@@ -16,10 +17,13 @@ describe("registerUser controller - unit", () => {
   it("should return 400 when required fields are missing", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "a@b.com", name: "John" }, // missing age and password
+      body: { email: "a@b.com", name: "John" } // missing age and password
     });
     const res = httpMocks.createResponse();
-    await registerUser(req as any, res as any);
+    await registerUser(
+      (req as unknown) as Request,
+      (res as unknown) as Response
+    );
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
     expect(body.error).toMatch(/Faltan campos obligatorios/i);
@@ -34,8 +38,8 @@ describe("registerUser controller - unit", () => {
         age: 25,
         password: "abc12345",
         username: "johnny",
-        surname: "Doe",
-      },
+        surname: "Doe"
+      }
     });
     const res = httpMocks.createResponse();
 
@@ -47,10 +51,13 @@ describe("registerUser controller - unit", () => {
       email: "test@example.com",
       username: "johnny",
       name: "John",
-      age: 25,
+      age: 25
     });
 
-    await registerUser(req as any, res as any);
+    await registerUser(
+      (req as unknown) as Request,
+      (res as unknown) as Response
+    );
 
     expect(mockGetUserByEmail).toHaveBeenCalledWith("test@example.com");
     expect(mockGetUserByUsername).toHaveBeenCalledWith("johnny");
@@ -70,18 +77,21 @@ describe("registerUser controller - unit", () => {
         age: 30,
         password: "abc12345",
         username: "exists",
-        surname: "X",
-      },
+        surname: "X"
+      }
     });
     const res = httpMocks.createResponse();
 
     mockGetUserByEmail.mockResolvedValueOnce({
       id: "u1",
-      email: "exists@example.com",
+      email: "exists@example.com"
     });
     mockGetUserByUsername.mockResolvedValueOnce(null);
 
-    await registerUser(req as any, res as any);
+    await registerUser(
+      (req as unknown) as Request,
+      (res as unknown) as Response
+    );
 
     expect(res.statusCode).toBe(409);
     const body = res._getJSONData();
@@ -97,12 +107,15 @@ describe("registerUser controller - unit", () => {
         age: 20,
         password: "abc12345",
         username: "u",
-        surname: "s",
-      },
+        surname: "s"
+      }
     });
     const res = httpMocks.createResponse();
 
-    await registerUser(req as any, res as any);
+    await registerUser(
+      (req as unknown) as Request,
+      (res as unknown) as Response
+    );
     expect(res.statusCode).toBe(400);
   });
 
@@ -115,12 +128,15 @@ describe("registerUser controller - unit", () => {
         age: 22,
         password: "short",
         username: "u2",
-        surname: "s",
-      },
+        surname: "s"
+      }
     });
     const res = httpMocks.createResponse();
 
-    await registerUser(req as any, res as any);
+    await registerUser(
+      (req as unknown) as Request,
+      (res as unknown) as Response
+    );
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
     expect(body.error).toMatch(/contraseña/i);
