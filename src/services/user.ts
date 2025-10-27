@@ -4,16 +4,16 @@ import bcrypt from "bcryptjs";
 export async function createUser(
   email: string,
   name: string,
-  username :string,
+  username: string,
   surname: string,
   age: number,
-  password: string,
+  password: string
 ) {
   const hashedPassword = await bcrypt.hash(password, 10);
-  
+
   const { data, error } = await supabase
     .from("users")
-    .insert([{ email, name, surname, username,age, password: hashedPassword}])
+    .insert([{ email, name, surname, username, age, password: hashedPassword }])
     .select();
 
   if (error) throw new Error(error.message);
