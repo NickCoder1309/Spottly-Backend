@@ -4,7 +4,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "notFound";
 
 export function generateToken(payload: object): string {
   return jwt.sign(payload, SECRET_KEY, {
-    expiresIn: "2h",
+    expiresIn: "1h"
   });
 }
 
