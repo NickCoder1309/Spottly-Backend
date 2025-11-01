@@ -1,1 +1,1 @@
-A web application for connecting businesses and potential clients. 
+A web application for connecting businesses and potential clients.
