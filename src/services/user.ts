@@ -1,5 +1,5 @@
 import { supabase } from "../config/database";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 export async function createUser(
   email: string,
@@ -7,7 +7,7 @@ export async function createUser(
   username: string,
   surname: string,
   age: number,
-  password: string
+  password: string,
 ) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,4 +38,15 @@ export async function getUserByUsername(username: string) {
     .maybeSingle();
   if (error) throw new Error(error.message);
   return data; // could be null if not found
+}
+
+export async function updateUser(id: string, updates: Record<string, unknown>) {
+  const { data, error } = await supabase
+    .from("users")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
 }
