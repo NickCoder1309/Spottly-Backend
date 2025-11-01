@@ -20,7 +20,7 @@ describe("registerUser controller - unit", () => {
       body: { email: "a@b.com", name: "John" }, // missing age and password
     });
     const res = httpMocks.createResponse();
-    await registerUser(req as unknown as Request, res as unknown as Response);
+    await registerUser(req as Request, res as Response);
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
     expect(body.error).toMatch(/Faltan campos obligatorios/i);
@@ -51,7 +51,7 @@ describe("registerUser controller - unit", () => {
       age: 25,
     });
 
-    await registerUser(req as unknown as Request, res as unknown as Response);
+    await registerUser(req as Request, res as Response);
 
     expect(mockGetUserByEmail).toHaveBeenCalledWith("test@example.com");
     expect(mockGetUserByUsername).toHaveBeenCalledWith("johnny");
@@ -82,7 +82,7 @@ describe("registerUser controller - unit", () => {
     });
     mockGetUserByUsername.mockResolvedValueOnce(null);
 
-    await registerUser(req as unknown as Request, res as unknown as Response);
+    await registerUser(req as Request, res as Response);
 
     expect(res.statusCode).toBe(409);
     const body = res._getJSONData();
@@ -103,7 +103,7 @@ describe("registerUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await registerUser(req as unknown as Request, res as unknown as Response);
+    await registerUser(req as Request, res as Response);
     expect(res.statusCode).toBe(400);
   });
 
@@ -121,7 +121,7 @@ describe("registerUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await registerUser(req as unknown as Request, res as unknown as Response);
+    await registerUser(req as Request, res as Response);
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
     expect(body.error).toMatch(/contraseña/i);
