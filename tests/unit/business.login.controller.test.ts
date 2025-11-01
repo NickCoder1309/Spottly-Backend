@@ -1,21 +1,19 @@
-// tests/unit/loginUser.test.ts
-
-jest.mock("../../src/services/user");
+jest.mock("../../src/services/business");
 jest.mock("bcrypt");
 jest.mock("../../src/services/auth");
 
-import { loginUser } from "../../src/controller/user";
+import { loginBusiness } from "../../src/controller/business";
 import httpMocks from "node-mocks-http";
-import * as userService from "../../src/services/user";
+import * as businessService from "../../src/services/business";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../src/services/auth";
 import { Request, Response } from "express";
 
-const mockGetUserByEmail = userService.getUserByEmail as jest.Mock;
+const mockGetBusinessByEmail = businessService.getBusinessByEmail as jest.Mock;
 const mockCompare = bcrypt.compare as jest.Mock;
 const mockGenerateToken = generateToken as jest.Mock;
 
-describe("loginUser controller - unit", () => {
+describe("loginBusiness controller - unit", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -23,51 +21,51 @@ describe("loginUser controller - unit", () => {
   it("should return 400 if email or password is missing", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com" }, // missing password
+      body: { email: "test@biz.com" }, // missing password
     });
     const res = httpMocks.createResponse();
 
-    await loginUser(req as Request, res as Response);
+    await loginBusiness(req as Request, res as Response);
 
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
     expect(body.error).toMatch(/missing parameters/i);
   });
 
-  it("should return 404 if user is not found", async () => {
-    mockGetUserByEmail.mockResolvedValueOnce(null);
+  it("should return 404 if business is not found", async () => {
+    mockGetBusinessByEmail.mockResolvedValueOnce(null);
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "noone@example.com", password: "test" },
+      body: { email: "noone@biz.com", password: "test" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser(req as Request, res as Response);
+    await loginBusiness(req as Request, res as Response);
 
-    expect(mockGetUserByEmail).toHaveBeenCalledWith("noone@example.com");
+    expect(mockGetBusinessByEmail).toHaveBeenCalledWith("noone@biz.com");
     expect(res.statusCode).toBe(404);
     const body = res._getJSONData();
-    expect(body.error).toMatch(/user not found/i);
+    expect(body.error).toMatch(/business not found/i);
   });
 
   it("should return 400 if password is incorrect", async () => {
-    const fakeUser = {
+    const fakeBusiness = {
       id: "1",
-      email: "test@example.com",
-      username: "johnny",
+      email: "biz@example.com",
+      username: "mybiz",
       password: "hashedpass",
     };
-    mockGetUserByEmail.mockResolvedValueOnce(fakeUser);
-    mockCompare.mockResolvedValueOnce(false); // password invalid
+    mockGetBusinessByEmail.mockResolvedValueOnce(fakeBusiness);
+    mockCompare.mockResolvedValueOnce(false);
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "wrong" },
+      body: { email: "biz@example.com", password: "wrongpass" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser(req as Request, res as Response);
+    await loginBusiness(req as Request, res as Response);
 
     expect(bcrypt.compare).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
@@ -76,47 +74,52 @@ describe("loginUser controller - unit", () => {
   });
 
   it("should return 200 and token if login successful", async () => {
-    const fakeUser = {
+    const fakeBusiness = {
       id: "1",
-      email: "test@example.com",
-      username: "johnny",
-      name: "John",
+      email: "biz@example.com",
+      username: "mybiz",
+      name: "My Biz",
       password: "hashedpass",
+      busi_username: "mybiz",
+      category: "Restaurant",
+      rating: 4.5,
+      description: "Tasty food",
+      address: "123 Main St",
     };
-    mockGetUserByEmail.mockResolvedValueOnce(fakeUser);
+    mockGetBusinessByEmail.mockResolvedValueOnce(fakeBusiness);
     mockCompare.mockResolvedValueOnce(true);
     mockGenerateToken.mockReturnValue("fake-token");
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "correctpass" },
+      body: { email: "biz@example.com", password: "correctpass" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser(req as Request, res as Response);
+    await loginBusiness(req as Request, res as Response);
 
     expect(mockGenerateToken).toHaveBeenCalledWith({
       id: "1",
-      email: "test@example.com",
-      username: "johnny",
+      email: "biz@example.com",
+      username: "mybiz",
     });
     expect(res.statusCode).toBe(200);
     const body = res._getJSONData();
     expect(body.message).toMatch(/login successful/i);
     expect(body.token).toBe("fake-token");
-    expect(body.user.email).toBe("test@example.com");
+    expect(body.user.email).toBe("biz@example.com");
   });
 
   it("should return 500 if an exception is thrown", async () => {
-    mockGetUserByEmail.mockRejectedValueOnce(new Error("DB error"));
+    mockGetBusinessByEmail.mockRejectedValueOnce(new Error("DB error"));
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "whatever" },
+      body: { email: "biz@example.com", password: "whatever" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser(req as Request, res as Response);
+    await loginBusiness(req as Request, res as Response);
 
     expect(res.statusCode).toBe(500);
     const body = res._getJSONData();
