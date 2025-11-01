@@ -1,4 +1,4 @@
-// tests/integration/login.test.ts
+// tests/integration/user.login.test.ts
 import request from "supertest";
 import app from "../../src/app";
 import * as userService from "../../src/services/user";
@@ -22,17 +22,15 @@ describe("POST /api/users/login", () => {
       email: "test@example.com",
       username: "johnny",
       name: "John",
-      password: "hashedpass"
+      password: "hashedpass",
     });
     mockCompare.mockResolvedValueOnce(true);
     mockGenerateToken.mockReturnValue("fake-token");
 
-    const response = await request(app)
-      .post("/api/users/login")
-      .send({
-        email: "test@example.com",
-        password: "Password123"
-      });
+    const response = await request(app).post("/api/users/login").send({
+      email: "test@example.com",
+      password: "Password123",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body.token).toBe("fake-token");
@@ -45,16 +43,14 @@ describe("POST /api/users/login", () => {
       email: "test@example.com",
       username: "johnny",
       name: "John",
-      password: "hashedpass"
+      password: "hashedpass",
     });
     mockCompare.mockResolvedValueOnce(false);
 
-    const response = await request(app)
-      .post("/api/users/login")
-      .send({
-        email: "test@example.com",
-        password: "wrong"
-      });
+    const response = await request(app).post("/api/users/login").send({
+      email: "test@example.com",
+      password: "wrong",
+    });
 
     expect(response.status).toBe(400);
     expect(response.body.error).toMatch(/incorrect password/i);

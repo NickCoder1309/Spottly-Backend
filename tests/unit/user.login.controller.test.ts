@@ -23,11 +23,11 @@ describe("loginUser controller - unit", () => {
   it("should return 400 if email or password is missing", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com" } // missing password
+      body: { email: "test@example.com" }, // missing password
     });
     const res = httpMocks.createResponse();
 
-    await loginUser((req as unknown) as Request, (res as unknown) as Response);
+    await loginUser(req as unknown as Request, res as unknown as Response);
 
     expect(res.statusCode).toBe(400);
     const body = res._getJSONData();
@@ -39,11 +39,11 @@ describe("loginUser controller - unit", () => {
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "noone@example.com", password: "test" }
+      body: { email: "noone@example.com", password: "test" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser((req as unknown) as Request, (res as unknown) as Response);
+    await loginUser(req as unknown as Request, res as unknown as Response);
 
     expect(mockGetUserByEmail).toHaveBeenCalledWith("noone@example.com");
     expect(res.statusCode).toBe(404);
@@ -56,18 +56,18 @@ describe("loginUser controller - unit", () => {
       id: "1",
       email: "test@example.com",
       username: "johnny",
-      password: "hashedpass"
+      password: "hashedpass",
     };
     mockGetUserByEmail.mockResolvedValueOnce(fakeUser);
     mockCompare.mockResolvedValueOnce(false); // password invalid
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "wrong" }
+      body: { email: "test@example.com", password: "wrong" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser((req as unknown) as Request, (res as unknown) as Response);
+    await loginUser(req as unknown as Request, res as unknown as Response);
 
     expect(bcrypt.compare).toHaveBeenCalled();
     expect(res.statusCode).toBe(400);
@@ -81,7 +81,7 @@ describe("loginUser controller - unit", () => {
       email: "test@example.com",
       username: "johnny",
       name: "John",
-      password: "hashedpass"
+      password: "hashedpass",
     };
     mockGetUserByEmail.mockResolvedValueOnce(fakeUser);
     mockCompare.mockResolvedValueOnce(true);
@@ -89,16 +89,16 @@ describe("loginUser controller - unit", () => {
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "correctpass" }
+      body: { email: "test@example.com", password: "correctpass" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser((req as unknown) as Request, (res as unknown) as Response);
+    await loginUser(req as unknown as Request, res as unknown as Response);
 
     expect(mockGenerateToken).toHaveBeenCalledWith({
       id: "1",
       email: "test@example.com",
-      username: "johnny"
+      username: "johnny",
     });
     expect(res.statusCode).toBe(200);
     const body = res._getJSONData();
@@ -112,11 +112,11 @@ describe("loginUser controller - unit", () => {
 
     const req = httpMocks.createRequest({
       method: "POST",
-      body: { email: "test@example.com", password: "whatever" }
+      body: { email: "test@example.com", password: "whatever" },
     });
     const res = httpMocks.createResponse();
 
-    await loginUser((req as unknown) as Request, (res as unknown) as Response);
+    await loginUser(req as unknown as Request, res as unknown as Response);
 
     expect(res.statusCode).toBe(500);
     const body = res._getJSONData();

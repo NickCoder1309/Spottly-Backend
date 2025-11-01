@@ -18,19 +18,17 @@ describe("POST /api/users/register", () => {
       email: "test@example.com",
       username: "test",
       name: "John",
-      age: 25
+      age: 25,
     });
 
-    const response = await request(app)
-      .post("/api/users/register")
-      .send({
-        email: "test@example.com",
-        name: "John",
-        surname: "Doe",
-        username: "test",
-        age: 25,
-        password: "Password123"
-      });
+    const response = await request(app).post("/api/users/register").send({
+      email: "test@example.com",
+      name: "John",
+      surname: "Doe",
+      username: "test",
+      age: 25,
+      password: "Password123",
+    });
 
     expect(response.status).toBe(201);
     expect(response.body.email).toBe("test@example.com");

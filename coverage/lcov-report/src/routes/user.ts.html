@@ -25,7 +25,7 @@
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">6/6</span>
+            <span class="fraction">7/7</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -43,7 +43,7 @@
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">6/6</span>
+            <span class="fraction">7/7</span>
           </div>
         </div>
         <p class="quiet">
@@ -68,22 +68,25 @@
 <a name='L7'></a><a href='#L7'>7</a>
 <a name='L8'></a><a href='#L8'>8</a>
 <a name='L9'></a><a href='#L9'>9</a>
-<a name='L10'></a><a href='#L10'>10</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Router } from "express";
-import { registerUser, loginUser } from "../controller/user";
+import { registerUser, loginUser, updateAUser } from "../controller/user";
 &nbsp;
 const router = Router();
 &nbsp;
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.put("/updateUser/:userId", updateAUser);
 &nbsp;
 export default router;
 &nbsp;</pre></td></tr></table></pre>
@@ -100,7 +103,7 @@ export default router;
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-10-27T17:05:09.097Z
+      at 2025-11-01T17:27:48.706Z
     </div>
     <script src="../../prettify.js"></script>
     <script>
