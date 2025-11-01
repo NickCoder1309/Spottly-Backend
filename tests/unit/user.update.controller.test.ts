@@ -31,7 +31,7 @@ describe("updateAUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await updateAUser(req as unknown as Request, res as unknown as Response);
+    await updateAUser(req as Request, res as unknown as Response);
 
     expect(mockUpdateUser).toHaveBeenCalledWith("1", {
       name: "John",
@@ -55,7 +55,7 @@ describe("updateAUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await updateAUser(req as unknown as Request, res as unknown as Response);
+    await updateAUser(req as Request, res as Response);
 
     expect(mockHash).toHaveBeenCalledWith("mypassword123", 10);
     expect(mockUpdateUser).toHaveBeenCalledWith("2", {
@@ -74,7 +74,7 @@ describe("updateAUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await updateAUser(req as unknown as Request, res as unknown as Response);
+    await updateAUser(req as Request, res as Response);
 
     expect(res.statusCode).toBe(500);
     const body = res._getJSONData();
@@ -92,7 +92,7 @@ describe("updateAUser controller - unit", () => {
     });
     const res = httpMocks.createResponse();
 
-    await updateAUser(req as unknown as Request, res as unknown as Response);
+    await updateAUser(req as Request, res as Response);
 
     expect(mockHash).not.toHaveBeenCalled();
     expect(mockUpdateUser).toHaveBeenCalledWith("3", {
